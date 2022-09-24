@@ -1,11 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, BadRequestException } from "@nestjs/common";
-import { MemberService } from './member.service';
-import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post, Req,
+} from "@nestjs/common";
+import { MemberService } from "./member.service";
+import { CreateMemberDto } from "./dto/create-member.dto";
+import { UpdateMemberDto } from "./dto/update-member.dto";
+import { Request } from "express";
+import { Custom } from "../decorator/decorater.custom";
+import { CustomIntPipe } from '../pipes/parse-int-pipe';
 
 @Controller('member')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
+
+  @Get("/pipe/:id")
+  pipeTest(@Param('id') id: string) {
+    console.log(`id: ${id}`)
+  }
+
+  @Get("/decorator")
+  decoratorTest(@Custom('name', CustomIntPipe) req: Request) {
+    console.log(req);
+  }
 
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
@@ -17,8 +40,8 @@ export class MemberController {
     return this.memberService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id', new ParseIntPipe({exceptionFactory: () => new BadRequestException()})) id: string) {
+  @Get(":id")
+  findOne(@Param("id", ParseIntPipe) id: string) {
     return this.memberService.findOne(+id);
   }
 

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MemberController } from './member.controller';
 import { MemberService } from './member.service';
 import { BadGatewayException, BadRequestException } from "@nestjs/common";
+import { request } from 'http';
 
 describe('MemberController', () => {
   let controller: MemberController;
@@ -20,12 +21,11 @@ describe('MemberController', () => {
   });
 
   it ('findOne', () => {
-    expect(controller.findOne("23")).toEqual(23);
+    expect(controller.findOne('23')).toEqual(23);
   });
 
-  it("findOneParseIntError", async () => {
-    // await expect(controller.findOne("error")).rejects.toThrowError(new BadRequestException());
-    // controller.findOne("error");
-    // throw new BadRequestException();
+  it('parseIntError', () => {
+    console.log(controller.findOne('23'));
+    console.log(controller.findOne('error'));
   });
 });
