@@ -8,6 +8,10 @@ import { Request } from "express";
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
+  @Get('/ref')
+  moduleRefTest() {
+    this.catsService.test();
+  }
   @Post()
   create(@Body() createCatDto: CreateCatDto) {
     return this.catsService.create(createCatDto);

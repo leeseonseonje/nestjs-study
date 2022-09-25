@@ -7,7 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post, Req,
+  Post, Req, UseFilters, ValidationPipe
 } from "@nestjs/common";
 import { MemberService } from "./member.service";
 import { CreateMemberDto } from "./dto/create-member.dto";
@@ -15,8 +15,11 @@ import { UpdateMemberDto } from "./dto/update-member.dto";
 import { Request } from "express";
 import { Custom } from "../decorator/decorater.custom";
 import { CustomIntPipe } from '../pipes/parse-int-pipe';
+import { CustomExceptionFilter } from '../exception-filter/custom.exception.filter';
+import { CustomException } from '../exception-filter/excepiton/custom.exception';
 
 @Controller('member')
+@UseFilters(CustomExceptionFilter)
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
@@ -31,7 +34,7 @@ export class MemberController {
   }
 
   @Post()
-  create(@Body() createMemberDto: CreateMemberDto) {
+  create(@Body(ValidationPipe) createMemberDto: CreateMemberDto) {
     return this.memberService.create(createMemberDto);
   }
 
@@ -40,8 +43,14 @@ export class MemberController {
     return this.memberService.findAll();
   }
 
-  @Get(":id")
+  @Get("/throw/:id")
   findOne(@Param("id", ParseIntPipe) id: string) {
+    throw new CustomException('custom');
+    // return this.memberService.findOne(+id);
+  }
+
+  @Get(":id")
+  returnId(@Param("id") id: string) {
     return this.memberService.findOne(+id);
   }
 

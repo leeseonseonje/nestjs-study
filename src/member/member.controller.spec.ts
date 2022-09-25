@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MemberController } from './member.controller';
 import { MemberService } from './member.service';
-import { BadGatewayException, BadRequestException } from "@nestjs/common";
-import { request } from 'http';
+import { BadGatewayException, BadRequestException, NotFoundException } from "@nestjs/common";
 
 describe('MemberController', () => {
   let controller: MemberController;
@@ -16,16 +15,17 @@ describe('MemberController', () => {
     controller = module.get<MemberController>(MemberController);
   });
 
-  it ('should be defined', () => {
+  it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it ('findOne', () => {
-    expect(controller.findOne('23')).toEqual(23);
+  it('findOne', () => {
+    expect(controller.returnId('23')).toBe(23);
   });
 
-  it('parseIntError', () => {
-    console.log(controller.findOne('23'));
-    console.log(controller.findOne('error'));
+  it('parseIntError', async () => {
+    await expect( async () => {
+      await controller.findOne('error');
+    }).rejects.toThrowError(BadRequestException);
   });
 });
