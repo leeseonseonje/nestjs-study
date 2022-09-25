@@ -1,13 +1,13 @@
 import {
   BadRequestException,
-  Body,
+  Body, CacheInterceptor,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
-  Post, Req, UseFilters, ValidationPipe
+  Post, Req, UseFilters, UseGuards, UseInterceptors, ValidationPipe
 } from "@nestjs/common";
 import { MemberService } from "./member.service";
 import { CreateMemberDto } from "./dto/create-member.dto";
@@ -17,9 +17,13 @@ import { Custom } from "../decorator/decorater.custom";
 import { CustomIntPipe } from '../pipes/parse-int-pipe';
 import { CustomExceptionFilter } from '../exception-filter/custom.exception.filter';
 import { CustomException } from '../exception-filter/excepiton/custom.exception';
+import { CustomGuard } from '../guard/custom.guard';
+import { LoggingInterceptor } from '../interceptor/custom.interceptor';
 
 @Controller('member')
-@UseFilters(CustomExceptionFilter)
+// @UseFilters(CustomExceptionFilter)
+// @UseGuards(CustomGuard)
+@UseInterceptors(CacheInterceptor)
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
@@ -40,6 +44,7 @@ export class MemberController {
 
   @Get()
   findAll() {
+    console.log('findAll Controller');
     return this.memberService.findAll();
   }
 

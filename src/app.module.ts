@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { MemberModule } from './member/member.module';
-import { LoggerMiddleware } from './middleware/logger.middleware';
+import { LoggerMiddleware, LogMiddleware } from './middleware/logger.middleware';
 import { CatsController } from './cats/cats.controller';
 import { MemberController } from './member/member.controller';
 
@@ -15,7 +15,7 @@ import { MemberController } from './member/member.controller';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer
-      .apply(LoggerMiddleware)
+      .apply(LoggerMiddleware, LogMiddleware)
       .forRoutes(MemberController);
   }
 

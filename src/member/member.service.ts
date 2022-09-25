@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
+import { LoggingInterceptor } from '../interceptor/custom.interceptor';
 
 @Injectable()
 export class MemberService {
@@ -10,6 +11,7 @@ export class MemberService {
   }
 
   findAll() {
+    console.log('findAll Service');
     return `This action returns all member`;
   }
 
