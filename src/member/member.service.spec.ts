@@ -15,4 +15,8 @@ describe('MemberService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('findAll', () => {
+    expect(service.findAll()).toBe(`This action returns all member`);
+  });
 });

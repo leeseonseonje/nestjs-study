@@ -18,12 +18,12 @@ import { CustomIntPipe } from '../pipes/parse-int-pipe';
 import { CustomExceptionFilter } from '../exception-filter/custom.exception.filter';
 import { CustomException } from '../exception-filter/excepiton/custom.exception';
 import { CustomGuard } from '../guard/custom.guard';
-import { LoggingInterceptor } from '../interceptor/custom.interceptor';
+import { CustomInterceptor } from '../interceptor/custom.interceptor';
 
 @Controller('member')
 // @UseFilters(CustomExceptionFilter)
 // @UseGuards(CustomGuard)
-@UseInterceptors(CacheInterceptor)
+@UseInterceptors(CustomInterceptor)
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
@@ -51,7 +51,6 @@ export class MemberController {
   @Get("/throw/:id")
   findOne(@Param("id", ParseIntPipe) id: string) {
     throw new CustomException('custom');
-    // return this.memberService.findOne(+id);
   }
 
   @Get(":id")

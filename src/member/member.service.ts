@@ -1,7 +1,7 @@
 import { Injectable, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { LoggingInterceptor } from '../interceptor/custom.interceptor';
+import { CustomInterceptor } from '../interceptor/custom.interceptor';
 
 @Injectable()
 export class MemberService {

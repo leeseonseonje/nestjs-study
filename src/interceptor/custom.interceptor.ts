@@ -6,13 +6,13 @@ import {
   UseInterceptors,
   BadRequestException
 } from '@nestjs/common';
-import { catchError, map, Observable, pipe, throwError } from 'rxjs';
+import { catchError, map, Observable, of, pipe, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { log } from 'util';
 import e from 'express';
 
 @Injectable()
-export class LoggingInterceptor implements NestInterceptor {
+export class CustomInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     console.log('Before...');
 
