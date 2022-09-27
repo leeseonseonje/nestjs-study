@@ -1,20 +1,22 @@
-import { Injectable, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Injectable, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
-import { Repository } from 'typeorm';
+import { DataSource, getConnection, Repository } from 'typeorm';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private memberRepository: Repository<Member>,
-  ) {}
+  ) {
+  }
 
-  create(createMemberDto: CreateMemberDto) {
+  async create(createMemberDto: CreateMemberDto) {
+
     let member = this.memberRepository.create(createMemberDto);
-    this.memberRepository.save(member);
+    await this.memberRepository.save(member);
   }
 
   findAll() {
