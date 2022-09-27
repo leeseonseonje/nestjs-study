@@ -1,29 +1,36 @@
 import { Injectable, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { CustomInterceptor } from '../interceptor/custom.interceptor';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Member } from './entities/member.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MemberService {
+  constructor(
+    @InjectRepository(Member)
+    private memberRepository: Repository<Member>,
+  ) {}
 
   create(createMemberDto: CreateMemberDto) {
-    return 'This action adds a new member';
+    let member = this.memberRepository.create(createMemberDto);
+    this.memberRepository.save(member);
   }
 
   findAll() {
-    console.log('findAll Service');
-    return `This action returns all member`;
+    return this.memberRepository.find();
   }
 
   findOne(id: number) {
-    return id
+    let findMember = this.memberRepository.findOneBy({ id });
+    console.log(findMember)
   }
 
   update(id: number, updateMemberDto: UpdateMemberDto) {
-    return `This action updates a #${id} member`;
+
   }
 
   remove(id: number) {
-    return `This action removes a #${id} member`;
+    this.memberRepository.delete(id);
   }
 }

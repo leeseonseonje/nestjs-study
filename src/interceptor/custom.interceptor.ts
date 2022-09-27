@@ -10,21 +10,23 @@ import { catchError, map, Observable, of, pipe, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { log } from 'util';
 import e from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Member } from '../member/entities/member.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CustomInterceptor implements NestInterceptor {
+  constructor(
+    @InjectRepository(Member)
+    private memberRepository: Repository<Member>
+  ) {
+  }
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     console.log('Before...');
 
     const now = Date.now();
     return next
-      .handle()
-      .pipe(
-        tap(async () => console.log(`After... ${Date.now() - now}ms`)),
-      )
-      .pipe(tap(async () => console.log('End')))
-      .pipe(tap(s => console.log(s)))
-      .pipe(map(v => 'map'));
+      .handle();
   }
 }
 
