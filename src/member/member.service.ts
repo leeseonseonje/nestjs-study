@@ -21,9 +21,9 @@ export class MemberService {
     return this.memberRepository.find();
   }
 
-  findOne(id: number) {
-    let findMember = this.memberRepository.findOneBy({ id });
-    console.log(findMember)
+  async findOne(id: number) {
+    let findMember = await this.memberRepository.findOneBy({ id });
+    console.log(findMember);
   }
 
   update(id: number, updateMemberDto: UpdateMemberDto) {
