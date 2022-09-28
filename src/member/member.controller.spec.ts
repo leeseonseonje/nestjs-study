@@ -1,15 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MemberController } from './member.controller';
 import { MemberService } from './member.service';
-import { BadGatewayException, BadRequestException, NotFoundException } from "@nestjs/common";
+import { AppModule } from "../app.module";
+import { CatsModule } from "../cats/cats.module";
+import { MemberModule } from "./member.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+
+const request = require('supertest');
 
 describe('MemberController', () => {
   let controller: MemberController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [MemberController],
-      providers: [MemberService],
+      imports: [CatsModule, MemberModule, TypeOrmModule.forRoot({
+        type: 'mysql',
+        host: 'localhost',
+        port: 3306,
+        username: 'root',
+        password: 'root',
+        database: 'nestjs',
+        autoLoadEntities: true,
+        synchronize: true,
+        logging: true,
+      }),],
     }).compile();
 
     controller = module.get<MemberController>(MemberController);
@@ -20,12 +34,13 @@ describe('MemberController', () => {
   });
 
   it('findOne', () => {
-    expect(controller.returnId('23')).toBe(23);
+    expect(controller.findById('23')).toBe(23);
   });
 
   it('parseIntError', async () => {
-    await expect( async () => {
-      await controller.findOne('error');
-    }).rejects.toThrowError(BadRequestException);
+    await request('http://localhost:3000')
+      .get('/member/error')
+      .send()
+      .expect(400);
   });
 });

@@ -1,26 +1,18 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { DynamicModule, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { MemberModule } from './member/member.module';
 import { LoggerMiddleware, LogMiddleware } from './middleware/logger.middleware';
 import { MemberController } from './member/member.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { Member } from './member/entities/member.entity';
+import { dbConfig } from "./db.connect/db.config";
+import { TypeOrmExModule } from "./decorator/typeorm-ex.decorator";
+import { MemberRepository } from "./member/member.repository";
+
 
 @Module({
-  imports: [CatsModule, MemberModule, TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: 'root',
-    database: 'nestjs',
-    autoLoadEntities: true,
-    synchronize: true,
-    logging: true,
-  }),],
+  imports: [CatsModule, MemberModule, dbConfig, TypeOrmExModule.forCustomRepository([MemberRepository])],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,15 +1,15 @@
 import { BadRequestException, Injectable, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Member } from './entities/member.entity';
-import { DataSource, getConnection, Repository } from 'typeorm';
+import { MemberRepository } from "./member.repository";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Member } from "./entities/member.entity";
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
-    private memberRepository: Repository<Member>,
+    private memberRepository: MemberRepository,
   ) {
   }
 
@@ -23,7 +23,7 @@ export class MemberService {
     return this.memberRepository.find();
   }
 
-  async findOne(id: number) {
+  async findById(id: number) {
     let findMember = await this.memberRepository.findOneBy({ id });
     console.log(findMember);
   }

@@ -3,10 +3,11 @@ import { MemberService } from './member.service';
 import { MemberController } from './member.controller';
 import { Member } from './entities/member.entity';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { MemberRepository } from "./member.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Member])],
   controllers: [MemberController],
-  providers: [MemberService],
+  providers: [MemberService, MemberRepository],
 })
 export class MemberModule {}

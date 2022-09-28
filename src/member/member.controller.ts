@@ -54,8 +54,8 @@ export class MemberController {
   }
 
   @Get(":id")
-  returnId(@Param("id") id: string) {
-    return this.memberService.findOne(+id);
+  findById(@Param("id", ParseIntPipe) id: string)  {
+    return this.memberService.findById(+id);
   }
 
   @Patch(':id')
