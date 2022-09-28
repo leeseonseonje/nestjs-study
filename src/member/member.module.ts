@@ -9,6 +9,4 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
   controllers: [MemberController],
   providers: [MemberService],
 })
-export class MemberModule {
-
-}
+export class MemberModule {}
