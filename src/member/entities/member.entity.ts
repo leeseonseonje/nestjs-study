@@ -11,4 +11,8 @@ export class Member {
 
   @Column()
   age: number;
+
+  @Column()
+  signCount: number;
+
 }

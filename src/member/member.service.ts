@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { MemberRepository } from "./member.repository";
@@ -14,9 +14,16 @@ export class MemberService {
   }
 
   async create(createMemberDto: CreateMemberDto) {
-
     let member = this.memberRepository.create(createMemberDto);
-    await this.memberRepository.save(member);
+    let member2 = this.memberRepository.create(createMemberDto);
+    let member3 = this.memberRepository.create(createMemberDto);
+
+    await this.memberRepository.manager.transaction(async (manager) => {
+      await this.memberRepository.save(member);
+      await this.memberRepository.save(member2);
+      await this.memberRepository.save(member3);
+    })
+    console.log('save');
   }
 
   findAll() {

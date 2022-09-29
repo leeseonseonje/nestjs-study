@@ -7,4 +7,7 @@ export class CreateMemberDto {
 
   @IsInt()
   age: number;
+
+  @IsInt()
+  signCount: number;
 }

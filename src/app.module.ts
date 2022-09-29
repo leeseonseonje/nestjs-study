@@ -12,7 +12,7 @@ import { MemberRepository } from "./member/member.repository";
 
 
 @Module({
-  imports: [CatsModule, MemberModule, dbConfig, TypeOrmExModule.forCustomRepository([MemberRepository])],
+  imports: [CatsModule, MemberModule, dbConfig],
   controllers: [AppController],
   providers: [AppService],
 })
