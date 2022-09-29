@@ -1,13 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MemberService } from './member.service';
 import { MemberModule } from "./member.module";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { Member } from "./entities/member.entity";
-import { MemberController } from "./member.controller";
 import { CatsModule } from "../cats/cats.module";
 import { dbConfig } from "../db.connect/db.config";
 import { AppModule } from "../app.module";
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 describe('MemberService', () => {
   let service: MemberService;

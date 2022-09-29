@@ -4,10 +4,19 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MemberRepository extends Repository<Member> {
+  test(name: string): void {
+    console.log(name)
+  }
+}
 
-  async test(name: string) {
-    console.log(name);
-    let count = this.createQueryBuilder().select().from(Member, 'member').getCount();
-    console.log(count)
+export interface MemberRepositoryCustom {
+
+  test(name: string): void;
+}
+
+@Injectable()
+export class MemberRepositoryImpl implements MemberRepositoryCustom {
+  test(name: string): void {
+    console.log(name)
   }
 }

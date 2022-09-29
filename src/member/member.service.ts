@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UseInterceptors } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { MemberRepository } from "./member.repository";
+import { MemberRepository, MemberRepositoryImpl } from "./member.repository";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Member } from "./entities/member.entity";
 import { raw } from 'express';
@@ -11,16 +11,17 @@ export class MemberService {
   constructor(
     @InjectRepository(Member)
     private memberRepository: MemberRepository,
+    private memRe: MemberRepository
+
   ) {
   }
 
   async test(name: string) {
-    let result = await this.memberRepository.createQueryBuilder()
-      .select('member')
-      .from(Member, 'member')
-      .getMany();
-    console.log(result);
-    // this.memberRepository.test('name');
+    // let result = await this.memberRepository.createQueryBuilder()
+    //   .select('member')
+    //   .from(Member, 'member')
+    //   .getMany();
+    await this.memRe.test('name');
   }
   async create(createMemberDto: CreateMemberDto) {
     let member = this.memberRepository.create(createMemberDto);
@@ -28,9 +29,10 @@ export class MemberService {
     let member3 = this.memberRepository.create(createMemberDto);
 
     await this.memberRepository.manager.transaction(async (manager) => {
-      await this.memberRepository.save(member);
-      await this.memberRepository.save(member2);
-      await this.memberRepository.save(member3);
+      await manager.save(member);
+      await manager.save(member2);
+      await manager.save(member3);
+      throw new InternalServerErrorException();
     })
 
     console.log('save');
