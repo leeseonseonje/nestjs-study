@@ -8,6 +8,6 @@ import { MemberRepository } from "./member.repository";
 @Module({
   imports: [TypeOrmModule.forFeature([Member])],
   controllers: [MemberController],
-  providers: [MemberService],
+  providers: [MemberService, MemberRepository],
 })
 export class MemberModule {}

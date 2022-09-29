@@ -4,6 +4,7 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { MemberRepository } from "./member.repository";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Member } from "./entities/member.entity";
+import { raw } from 'express';
 
 @Injectable()
 export class MemberService {
@@ -13,6 +14,14 @@ export class MemberService {
   ) {
   }
 
+  async test(name: string) {
+    let result = await this.memberRepository.createQueryBuilder()
+      .select('member')
+      .from(Member, 'member')
+      .getMany();
+    console.log(result);
+    // this.memberRepository.test('name');
+  }
   async create(createMemberDto: CreateMemberDto) {
     let member = this.memberRepository.create(createMemberDto);
     let member2 = this.memberRepository.create(createMemberDto);
@@ -23,6 +32,7 @@ export class MemberService {
       await this.memberRepository.save(member2);
       await this.memberRepository.save(member3);
     })
+
     console.log('save');
   }
 
