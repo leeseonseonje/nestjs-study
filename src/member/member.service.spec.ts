@@ -25,10 +25,10 @@ describe('MemberService', () => {
   });
 
   it("save", async () => {
-    await service.create({ name: 'name', age: 25, signCount: 1 })
+    await service.create({ name: 'name', age: 25, signCount: 1 });
   });
 
-  it('test', async () => {
-    await service.test('name');
+  it('queryRunner', async () => {
+    await service.saveQueryRunner({ name: 'name', age: 25, signCount: 1 });
   });
 });

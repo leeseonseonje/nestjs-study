@@ -12,17 +12,33 @@ export class MemberService {
     @InjectRepository(Member)
     private memberRepository: MemberRepository,
     private memRe: MemberRepository
-
   ) {
   }
 
-  async test(name: string) {
-    // let result = await this.memberRepository.createQueryBuilder()
-    //   .select('member')
-    //   .from(Member, 'member')
-    //   .getMany();
-    await this.memRe.test('name');
+  async saveQueryRunner(createMemberDto: CreateMemberDto) {
+    let member = this.memberRepository.create(createMemberDto);
+    let member2 = this.memberRepository.create(createMemberDto);
+    let member3 = this.memberRepository.create(createMemberDto);
+
+
+    const queryRunner = this.memberRepository.queryRunner;
+    await queryRunner?.connect();
+    await queryRunner?.startTransaction();
+    try {
+      // await queryRunner?.manager.save(member);
+      // await queryRunner?.manager.save(member2);
+      // await queryRunner?.manager.save(member3);
+      await this.memberRepository.save(member);
+      await this.memberRepository.save(member2);
+      await this.memberRepository.save(member3);
+      await queryRunner?.commitTransaction();
+    } catch (e) {
+      await queryRunner?.rollbackTransaction();
+    } finally {
+      await queryRunner?.release();
+    }
   }
+
   async create(createMemberDto: CreateMemberDto) {
     let member = this.memberRepository.create(createMemberDto);
     let member2 = this.memberRepository.create(createMemberDto);
@@ -32,7 +48,7 @@ export class MemberService {
       await manager.save(member);
       await manager.save(member2);
       await manager.save(member3);
-      throw new InternalServerErrorException();
+      // throw new InternalServerErrorException();
     })
 
     console.log('save');
