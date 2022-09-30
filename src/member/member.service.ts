@@ -5,37 +5,37 @@ import { MemberRepository, MemberRepositoryImpl } from "./member.repository";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Member } from "./entities/member.entity";
 import { raw } from 'express';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private memberRepository: MemberRepository,
-    private memRe: MemberRepository
+    private memRe: MemberRepository,
+    private dataSource: DataSource
   ) {
   }
 
   async saveQueryRunner(createMemberDto: CreateMemberDto) {
-    let member = this.memberRepository.create(createMemberDto);
-    let member2 = this.memberRepository.create(createMemberDto);
-    let member3 = this.memberRepository.create(createMemberDto);
 
+    let qr = this.dataSource.createQueryRunner();
+    let member = qr.manager.create(Member, createMemberDto);
+    let member2 = qr.manager.create(Member, createMemberDto);
+    let member3 = qr.manager.create(Member, createMemberDto);
 
-    const queryRunner = this.memberRepository.queryRunner;
-    await queryRunner?.connect();
-    await queryRunner?.startTransaction();
+    await qr.connect();
+    await qr.startTransaction();
     try {
-      // await queryRunner?.manager.save(member);
-      // await queryRunner?.manager.save(member2);
-      // await queryRunner?.manager.save(member3);
-      await this.memberRepository.save(member);
-      await this.memberRepository.save(member2);
-      await this.memberRepository.save(member3);
-      await queryRunner?.commitTransaction();
+      await qr.manager.save(member);
+      await qr.manager.save(member2);
+      await qr.manager.save(member3);
+      // throw new InternalServerErrorException();
+      await qr.commitTransaction();
     } catch (e) {
-      await queryRunner?.rollbackTransaction();
+      await qr.rollbackTransaction();
     } finally {
-      await queryRunner?.release();
+      await qr.release();
     }
   }
 
