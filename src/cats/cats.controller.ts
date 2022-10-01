@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Redirect } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Redirect,
+} from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
-import { Request } from "express";
+import { Request } from 'express';
 
 @Controller('cats')
 export class CatsController {

@@ -2,7 +2,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Member {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,8 +10,4 @@ export class Member {
 
   @Column()
   age: number;
-
-  @Column()
-  signCount: number;
-
 }

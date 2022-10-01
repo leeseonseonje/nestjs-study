@@ -1,28 +1,31 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { MemberRepository, MemberRepositoryImpl } from "./member.repository";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Member } from "./entities/member.entity";
-import { raw } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Member } from './entities/member.entity';
 import { DataSource } from 'typeorm';
-
+import { MemberRepository } from './member.repository';
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private memberRepository: MemberRepository,
+
     private memRe: MemberRepository,
-    private dataSource: DataSource
-  ) {
-  }
+
+    private dataSource: DataSource,
+  ) {}
 
   async saveQueryRunner(createMemberDto: CreateMemberDto) {
-
-    let qr = this.dataSource.createQueryRunner();
-    let member = qr.manager.create(Member, createMemberDto);
-    let member2 = qr.manager.create(Member, createMemberDto);
-    let member3 = qr.manager.create(Member, createMemberDto);
+    const qr = this.dataSource.createQueryRunner();
+    const member = qr.manager.create(Member, createMemberDto);
+    const member2 = qr.manager.create(Member, createMemberDto);
+    const member3 = qr.manager.create(Member, createMemberDto);
 
     await qr.connect();
     await qr.startTransaction();
@@ -36,20 +39,21 @@ export class MemberService {
       await qr.rollbackTransaction();
     } finally {
       await qr.release();
+      return member;
     }
   }
 
   async create(createMemberDto: CreateMemberDto) {
-    let member = this.memberRepository.create(createMemberDto);
-    let member2 = this.memberRepository.create(createMemberDto);
-    let member3 = this.memberRepository.create(createMemberDto);
+    const member = this.memberRepository.create(createMemberDto);
+    const member2 = this.memberRepository.create(createMemberDto);
+    const member3 = this.memberRepository.create(createMemberDto);
 
     await this.memberRepository.manager.transaction(async (manager) => {
       await manager.save(member);
       await manager.save(member2);
       await manager.save(member3);
       // throw new InternalServerErrorException();
-    })
+    });
 
     console.log('save');
   }
@@ -59,12 +63,13 @@ export class MemberService {
   }
 
   async findById(id: number) {
-    let findMember = await this.memberRepository.findOneBy({ id });
+    const findMember = await this.memberRepository.findOneBy({ id });
     console.log(findMember);
+    return id;
   }
 
   update(id: number, updateMemberDto: UpdateMemberDto) {
-
+    const member = this.memberRepository.create(updateMemberDto);
   }
 
   remove(id: number) {

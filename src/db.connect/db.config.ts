@@ -1,4 +1,4 @@
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export const dbConfig = TypeOrmModule.forRoot({
